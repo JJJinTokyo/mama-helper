@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新手妈妈助手</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0e17;--surface:#1a1928;--card:#201f30;--card2:#272639;
+  --accent:#f4a7c0;--accent2:#a78bfa;--accent3:#67e8f9;
+  --text:#ede9ff;--dim:#8b89a8;
+  --green:#6ee7b7;--yellow:#fcd34d;--red:#f87171;--orange:#fb923c;
+  --border:rgba(255,255,255,0.07);
+  --max:960px;--r:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── Header / Nav ── */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(15,14,23,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.header-inner{max-width:var(--max);margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}
+.site-logo{font-size:17px;font-weight:700;white-space:nowrap;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0}
+.site-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;flex:1}
+.site-nav::-webkit-scrollbar{display:none}
+.nav-link{padding:7px 13px;border-radius:8px;font-size:14px;color:var(--dim);cursor:pointer;white-space:nowrap;border:none;background:none;transition:all .18s;font-family:inherit}
+.nav-link:hover{color:var(--text);background:var(--card2)}
+.nav-link.active{color:var(--accent);background:rgba(244,167,192,.1)}
+
+/* ── Page Sections ── */
+.section{display:none;max-width:var(--max);margin:0 auto;padding:36px 24px 64px}
+.section.active{display:block}
+.section-title{font-size:26px;font-weight:700;margin-bottom:6px}
+.section-sub{font-size:15px;color:var(--dim);margin-bottom:32px}
+
+/* ── Home ── */
+.home-hero{background:linear-gradient(135deg,#1e1650 0%,#130f2e 100%);border:1px solid rgba(167,139,250,.2);border-radius:20px;padding:36px 32px;margin-bottom:32px;display:flex;align-items:center;gap:24px}
+.hero-age{font-size:48px;font-weight:800;color:var(--accent2);line-height:1}
+.hero-meta{font-size:15px;color:var(--dim);margin-top:8px}
+.hero-badge{display:inline-block;background:rgba(244,167,192,.12);border:1px solid rgba(244,167,192,.25);color:var(--accent);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-top:12px}
+
+.quick-title{font-size:14px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+@media(max-width:600px){.quick-grid{grid-template-columns:1fr 1fr}}
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 16px;cursor:pointer;transition:all .2s}
+.qcard:hover{background:var(--card2);border-color:var(--accent);transform:translateY(-2px)}
+.qcard .qi{font-size:28px;margin-bottom:10px}
+.qcard .qt{font-size:15px;font-weight:600}
+.qcard .qs{font-size:13px;color:var(--dim);margin-top:4px}
+.cry-quick{background:linear-gradient(135deg,rgba(244,107,160,.15),rgba(232,121,160,.08));border:1px solid rgba(244,167,192,.3);border-radius:var(--r);padding:22px 24px;margin-bottom:28px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s}
+.cry-quick:hover{background:linear-gradient(135deg,rgba(244,107,160,.22),rgba(232,121,160,.14))}
+.cry-quick .cq-text h2{font-size:19px;font-weight:700;margin-bottom:4px}
+.cry-quick .cq-text p{font-size:14px;color:var(--dim)}
+.cry-quick .cq-arrow{font-size:24px;opacity:.6}
+
+/* ── Cry Reference ── */
+.cry-intro{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:28px;font-size:14px;color:var(--dim);line-height:1.7}
+.cry-intro strong{color:var(--text)}
+
+.cry-grid{display:grid;gap:16px}
+.cry-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.cry-card.urgent{background:linear-gradient(135deg,#2d1515,#1e0f0f);border-color:rgba(248,113,113,.35)}
+.cry-card.full{grid-column:1 / -1}
+.cry-card-head{padding:18px 20px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.cry-card.urgent .cry-card-head{border-bottom-color:rgba(248,113,113,.2)}
+.cry-icon{font-size:26px}
+.cry-card-title{font-size:17px;font-weight:700}
+.cry-card.urgent .cry-card-title{color:var(--red)}
+.cry-card-body{padding:16px 20px;display:grid;gap:14px}
+@media(min-width:640px){
+  .cry-grid{grid-template-columns:1fr 1fr}
+}
+
+.signal-block{}
+.signal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:8px}
+.signal-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.signal-list li{font-size:14px;padding-left:18px;position:relative;line-height:1.5}
+.signal-list li::before{content:'·';position:absolute;left:0;color:var(--accent);font-size:18px;line-height:1.2}
+.cry-card.urgent .signal-list li::before{color:var(--red)}
+
+.action-block{background:rgba(255,255,255,.03);border-radius:10px;padding:12px 14px}
+.action-block .signal-label{color:var(--accent2)}
+.action-block .signal-list li::before{color:var(--accent2)}
+
+.cry-note{background:rgba(252,211,77,.06);border:1px solid rgba(252,211,77,.2);border-radius:10px;padding:10px 14px;font-size:13px;color:#fde68a;margin-top:4px}
+
+/* ── Generic Card ── */
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px}
+.sc h3{font-size:16px;font-weight:700;color:var(--accent2);margin-bottom:14px}
+.sc h4{font-size:13px;font-weight:600;color:var(--dim);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.04em}
+.sc.hl{background:linear-gradient(135deg,#152d1e,#0e1f14);border-color:rgba(110,231,183,.18)}
+.sc.hl h3{color:var(--green)}
+.sc.urgent-sc{background:linear-gradient(135deg,#2d1515,#1e0f0f);border-color:rgba(248,113,113,.28)}
+.sc.urgent-sc h3{color:var(--red)}
+
+/* ── Two-col layout ── */
+.two-col{display:grid;gap:16px}
+@media(min-width:640px){.two-col{grid-template-columns:1fr 1fr}}
+.three-col{display:grid;gap:16px}
+@media(min-width:640px){.three-col{grid-template-columns:1fr 1fr 1fr}}
+
+/* ── Big stat ── */
+.stat-box{text-align:center;padding:14px 8px}
+.stat-num{font-size:34px;font-weight:800;color:var(--accent)}
+.stat-unit{font-size:14px;color:var(--dim)}
+.stat-range{font-size:12px;color:var(--dim);margin-top:3px}
+
+/* ── Row ── */
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;gap:16px}
+.row:last-child{border-bottom:none}
+.row .lbl{color:var(--dim);flex-shrink:0}
+.row .val{font-weight:600;text-align:right}
+
+/* ── Table ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;border:1px solid var(--border)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:340px}
+.tbl th{background:var(--card2);padding:10px 8px;text-align:center;color:var(--dim);font-weight:600;font-size:12px;letter-spacing:.03em}
+.tbl td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.cur td{background:rgba(244,167,192,.09);color:var(--accent);font-weight:700}
+
+/* ── Alerts ── */
+.alert{border-radius:10px;padding:13px 16px;margin-bottom:12px;font-size:14px;line-height:1.65}
+.alert.red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+.alert.yellow{background:rgba(252,211,77,.07);border:1px solid rgba(252,211,77,.22);color:#fde68a}
+.alert.green{background:rgba(110,231,183,.07);border:1px solid rgba(110,231,183,.18);color:#a7f3d0}
+.alert.purple{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.22);color:#c4b5fd}
+.alert-title{font-weight:700;margin-bottom:5px}
+
+/* ── Vaccine ── */
+.vax-list{display:flex;flex-direction:column;gap:10px}
+.vax-item{display:flex;align-items:flex-start;gap:14px;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+.vax-item.done{opacity:.55}
+.vax-item.curr{background:rgba(252,211,77,.07);border-color:rgba(252,211,77,.35)}
+.vax-item.soon{border-color:rgba(167,139,250,.28)}
+.vstatus{font-size:12px;font-weight:700;min-width:76px;text-align:center;padding:5px 8px;border-radius:7px;flex-shrink:0;margin-top:2px}
+.vax-item.done .vstatus{background:rgba(110,231,183,.1);color:var(--green)}
+.vax-item.curr .vstatus{background:rgba(252,211,77,.15);color:var(--yellow)}
+.vax-item.soon .vstatus{background:rgba(167,139,250,.1);color:var(--accent2)}
+.vax-item.future .vstatus{background:rgba(255,255,255,.04);color:var(--dim)}
+.vinfo .vm{font-size:12px;color:var(--dim)}
+.vinfo .vn{font-size:15px;font-weight:600;margin-top:2px;line-height:1.4}
+.vinfo .vcue{font-size:12px;color:var(--yellow);margin-top:5px}
+
+/* ── Schedule ── */
+.sched-grid{display:grid;gap:8px}
+.sched-row{display:grid;grid-template-columns:60px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;align-items:baseline}
+.sched-row:last-child{border-bottom:none}
+.sched-time{color:var(--accent);font-weight:600;font-size:13px}
+
+/* ── Modal ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay.hidden{display:none}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:480px;padding:32px 28px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:21px;font-weight:700;margin-bottom:6px}
+.modal-sub{font-size:14px;color:var(--dim);margin-bottom:24px}
+.fg{margin-bottom:22px}
+.flabel{display:block;font-size:13px;font-weight:600;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.finput{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;font-size:15px;color:var(--text);font-family:inherit}
+.finput:focus{outline:none;border-color:var(--accent)}
+.radio-row{display:flex;gap:8px;flex-wrap:wrap}
+.rbtn{flex:1;min-width:80px;text-align:center;padding:11px 8px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--dim);cursor:pointer;font-size:14px;transition:all .18s;user-select:none}
+.rbtn:hover{border-color:var(--accent);color:var(--text)}
+.rbtn.sel{border-color:var(--accent);background:rgba(244,167,192,.1);color:var(--accent);font-weight:600}
+.save-btn{width:100%;padding:15px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#e879a0);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;transition:opacity .18s}
+.save-btn:hover{opacity:.9}
+.err-msg{display:none;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:16px}
+
+/* ── Footer ── */
+.site-footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;color:var(--dim);font-size:13px;line-height:1.8}
+
+/* ── Misc ── */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.tag.pink{background:rgba(244,167,192,.12);color:var(--accent)}
+.tag.purple{background:rgba(167,139,250,.12);color:var(--accent2)}
+.source-note{font-size:12px;color:var(--dim);margin-top:12px}
+</style>
+</head>
+<body>
+
+<!-- ── Site Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-logo">👶 新手妈妈助手</div>
+    <nav class="site-nav">
+      <button class="nav-link active" onclick="showSection('home')">首页</button>
+      <button class="nav-link" onclick="showSection('cry')">宝宝哭了</button>
+      <button class="nav-link" onclick="showSection('feed')">喂奶量</button>
+      <button class="nav-link" onclick="showSection('sleep')">睡眠</button>
+      <button class="nav-link" onclick="showSection('poop')">大便</button>
+      <button class="nav-link" onclick="showSection('growth')">身高体重</button>
+      <button class="nav-link" onclick="showSection('vaccine')">疫苗</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ── Home ── -->
+<section id="sec-home" class="section active">
+  <div id="home-hero"></div>
+  <p class="quick-title">快速查看</p>
+  <div style="margin-bottom:20px">
+    <div class="cry-quick" onclick="showSection('cry')">
+      <div class="cq-text">
+        <h2>😢 宝宝在哭，帮我判断</h2>
+        <p>对照信号快速找原因，附应对方法</p>
+      </div>
+      <div class="cq-arrow">→</div>
+    </div>
+  </div>
+  <div class="quick-grid">
+    <div class="qcard" onclick="showSection('feed')">
+      <div class="qi">🍼</div>
+      <div class="qt">喂奶量</div>
+      <div class="qs">当前月龄参考量</div>
+    </div>
+    <div class="qcard" onclick="showSection('sleep')">
+      <div class="qi">😴</div>
+      <div class="qt">睡眠</div>
+      <div class="qs">作息时间表参考</div>
+    </div>
+    <div class="qcard" onclick="showSection('growth')">
+      <div class="qi">📏</div>
+      <div class="qt">身高体重</div>
+      <div class="qs">体重身长参考值</div>
+    </div>
+    <div class="qcard" onclick="showSection('poop')">
+      <div class="qi">💩</div>
+      <div class="qt">大便</div>
+      <div class="qs">颜色频次判断</div>
+    </div>
+    <div class="qcard" onclick="showSection('vaccine')">
+      <div class="qi">💉</div>
+      <div class="qt">疫苗</div>
+      <div class="qs">本月应打什么</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 宝宝哭了 ── -->
+<section id="sec-cry" class="section">
+  <h1 class="section-title">😢 宝宝哭了</h1>
+  <p class="section-sub">以下是最常见的8种原因和对应信号，对照查看，找到最像的情况</p>
+
+  <div class="cry-intro">
+    <strong>使用方法：</strong>从第一张「紧急排查」开始看。如果不符合，继续往下找——对照每张卡片的「信号特征」，找到最像宝宝当前表现的那张。
+  </div>
+
+  <div class="cry-grid">
+
+    <!-- 紧急排查 full width -->
+    <div class="cry-card urgent full">
+      <div class="cry-card-head">
+        <span class="cry-icon">🚨</span>
+        <div>
+          <div class="cry-card-title">先看这里：需要立即就医</div>
+          <div style="font-size:13px;color:#f87171;margin-top:2px">有以下任意一种情况，立刻去急诊</div>
+        </div>
+      </div>
+      <div class="cry-card-body" style="grid-template-columns:1fr;gap:10px">
+        <ul class="signal-list">
+          <li><strong>哭一阵停一阵</strong>，间歇期宝宝萎靡、脸色发白，或大便变果酱色 → 高度怀疑<strong>肠套叠</strong>，立即急诊</li>
+          <li><strong>哭声持续尖叫</strong> + 发热 → 立即急诊</li>
+          <li><strong>3月龄以下任何发热（≥38°C）</strong> → 立即就医，不要等</li>
+          <li><strong>吐出黄绿色液体</strong> → 立即就医</li>
+        </ul>
+        <div class="cry-note">以上情况排除后，再往下继续对照。</div>
+      </div>
+    </div>
+
+    <!-- 饿了 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">😋</span>
+        <div><div class="cry-card-title">饿了</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">信号特征</div>
+          <ul class="signal-list">
+            <li>不停吃手，或嘴唇做吸吮动作</li>
+            <li>用手指轻碰脸颊，宝宝立刻转头朝向手指</li>
+            <li>头左右扭动，像在找什么</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">怎么做</div>
+          <ul class="signal-list">
+            <li>直接喂奶，不用等</li>
+            <li>喂后立刻停哭、表情放松 = 确认是饿了</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 困了 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">😪</span>
+        <div><div class="cry-card-title">困了</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">信号特征</div>
+          <ul class="signal-list">
+            <li>揉眼睛，或用手不停蹭脸</li>
+            <li>打哈欠</li>
+            <li>眼神开始涣散，不再盯着你</li>
+            <li>逗她，她把头转开不理你</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">怎么做</div>
+          <ul class="signal-list">
+            <li>停止逗玩，带到安静暗处</li>
+            <li>开白噪音，轻拍背</li>
+            <li>越哄越哭 = 过度疲劳，停止所有刺激</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 尿布 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">🍑</span>
+        <div><div class="cry-card-title">尿布湿了</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">怎么确认</div>
+          <ul class="signal-list">
+            <li>摸尿布——鼓胀、沉甸，明显比之前重</li>
+            <li>或者已经过了2小时以上没换</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">怎么做</div>
+          <ul class="signal-list">
+            <li>换上干净尿布</li>
+            <li>顺便检查衣服里有没有线头或标签顶到皮肤</li>
+            <li>检查是否有尿布疹，有红疹可用护臀霜</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 温度 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">🌡️</span>
+        <div><div class="cry-card-title">太热或太冷</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">怎么判断（摸颈背，不是手脚）</div>
+          <ul class="signal-list">
+            <li><strong>颈背出汗、发烫</strong> → 太热了，减少一层衣物</li>
+            <li><strong>颈背偏凉</strong> → 太冷了，加一层薄衣</li>
+            <li>手脚凉是正常末梢循环，不代表冷</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">参考室温</div>
+          <ul class="signal-list">
+            <li>建议室温：冬 20–24°C · 夏 25–28°C</li>
+            <li>新生儿比大人多穿一层</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 需要抱抱 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">🤗</span>
+        <div><div class="cry-card-title">需要抱抱（情感需求）</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">怎么判断</div>
+          <ul class="signal-list">
+            <li>把宝宝抱起来，贴近你的左胸（让她听到心跳）</li>
+            <li>哭声在30秒内明显减弱或停止</li>
+            <li>其他原因都排除了</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">怎么做</div>
+          <ul class="signal-list">
+            <li>贴近心跳 + 轻拍背 + 低声哼唱</li>
+            <li>不用担心"宠坏"——3月龄内及时回应是建立安全感的关键</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 想打嗝 -->
+    <div class="cry-card">
+      <div class="cry-card-head">
+        <span class="cry-icon">💨</span>
+        <div><div class="cry-card-title">想打嗝（喂奶后）</div></div>
+      </div>
+      <div class="cry-card-body">
+        <div class="signal-block">
+          <div class="signal-label">信号特征</div>
+          <ul class="signal-list">
+            <li>刚喂完奶不久（30分钟内）</li>
+            <li>发出短促的"嗯嗯"声</li>
+            <li>身体往前弓，表情痛苦</li>
+          </ul>
+        </div>
+        <div class="action-block">
+          <div class="signal-label">怎么做</div>
+          <ul class="signal-list">
+            <li>竖抱，让宝宝趴在你肩上</li>
+            <li>空心掌轻拍背部</li>
+            <li>5–10分钟没拍出来可先放下，稍后再试</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 胀气 full width -->
+    <div class="cry-card full">
+      <div class="cry-card-head">
+        <span class="cry-icon">🫧</span>
+        <div>
+          <div class="cry-card-title">胀气 / 肠绞痛</div>
+          <div style="font-size:13px;color:var(--dim);margin-top:2px">最常见于傍晚，生后2周到4个月是高发期</div>
+        </div>
+      </div>
+      <div class="cry-card-body" style="grid-template-columns:1fr">
+        <div style="display:grid;gap:16px">
+          <div class="signal-block">
+            <div class="signal-label">信号特征（有一种就可能是）</div>
+            <ul class="signal-list" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <li>双腿不停蜷起来，又踢出去</li>
+              <li>肚子摸起来硬鼓鼓的</li>
+              <li>放屁后哭声明显减弱</li>
+              <li>傍晚5–10点特别爱哭，其他时间正常</li>
+            </ul>
+          </div>
+          <div class="action-block">
+            <div class="signal-label">缓解方法</div>
+            <ul class="signal-list" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <li>顺时针轻按摩肚子（画圆圈）</li>
+              <li>飞机抱：宝宝趴在你前臂，肚子朝下轻摇</li>
+              <li>热毛巾敷肚子（不烫手为准）</li>
+              <li>下次喂奶后充分拍嗝，减少吞气</li>
+            </ul>
+          </div>
+        </div>
+        <div class="cry-note">
+          <strong>好消息：</strong>4个月后大多自愈。这是「PURPLE Crying / 黄昏泣き」——生后2周到5个月的正常发育现象，不是你的问题。<br>
+          <span style="color:var(--red)">⚠️ 警惕：</span>如果哭的间歇期宝宝萎靡、脸色发白，或大便变果酱色，立即去急诊（肠套叠）。
+        </div>
+      </div>
+    </div>
+
+    <!-- 找不到原因 -->
+    <div class="cry-card full" style="border-style:dashed;opacity:.85">
+      <div class="cry-card-head">
+        <span class="cry-icon">🤷</span>
+        <div><div class="cry-card-title">都不像？暂时找不到原因</div></div>
+      </div>
+      <div class="cry-card-body" style="grid-template-columns:1fr">
+        <ul class="signal-list">
+          <li>抱着安抚，开白噪音，观察体温和精神状态</li>
+          <li>如果持续哭闹超过3小时，建议就医</li>
+        </ul>
+        <div class="cry-note">你已经尽力了，这不是你的问题。有时候宝宝就是需要哭一会儿，陪着就够了。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── 喂奶量 ── -->
+<section id="sec-feed" class="section">
+  <h1 class="section-title">🍼 喂奶量参考</h1>
+  <p class="section-sub">根据宝宝当前月龄自动显示</p>
+  <div id="feed-content"></div>
+</section>
+
+<!-- ── 睡眠 ── -->
+<section id="sec-sleep" class="section">
+  <h1 class="section-title">😴 睡眠参考</h1>
+  <p class="section-sub">各月龄睡眠规律与作息参考</p>
+  <div id="sleep-content"></div>
+</section>
+
+<!-- ── 大便 ── -->
+<section id="sec-poop" class="section">
+  <h1 class="section-title">💩 大便参考</h1>
+  <p class="section-sub">颜色、频次与警惕信号</p>
+  <div id="poop-content"></div>
+</section>
+
+<!-- ── 生长 ── -->
+<section id="sec-growth" class="section">
+  <h1 class="section-title">📏 生长参考</h1>
+  <p class="section-sub">体重、身长、头围参考范围</p>
+  <div id="growth-content"></div>
+</section>
+
+<!-- ── 疫苗 ── -->
+<section id="sec-vaccine" class="section">
+  <h1 class="section-title">💉 疫苗进度</h1>
+  <div id="vaccine-content"></div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div style="max-width:var(--max);margin:0 auto">
+    <p>本站内容仅供参考，不构成医疗建议。如有疑问请咨询儿科医生。</p>
+  </div>
+</footer>
+
+<!-- ── Settings Modal ── -->
+<div id="settings-overlay" class="overlay hidden">
+  <div class="modal">
+    <div class="modal-title">👶 宝宝基本信息</div>
+    <div class="modal-sub">填写后所有内容自动匹配月龄</div>
+    <div id="settings-err" class="err-msg"></div>
+    <div class="fg">
+      <label class="flabel">宝宝生日</label>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px">
+        <select id="sel-year" class="finput" style="padding:12px 10px">
+          <option value="">年份</option>
+        </select>
+        <select id="sel-month" class="finput" style="padding:12px 10px">
+          <option value="">月</option>
+          <option value="01">1月</option><option value="02">2月</option><option value="03">3月</option>
+          <option value="04">4月</option><option value="05">5月</option><option value="06">6月</option>
+          <option value="07">7月</option><option value="08">8月</option><option value="09">9月</option>
+          <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+        </select>
+        <select id="sel-day" class="finput" style="padding:12px 10px">
+          <option value="">日</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="flabel">宝宝性别</label>
+      <div class="radio-row">
+        <div class="rbtn" id="rb-male" onclick="selectRadio('gender','male')">男宝宝 👦</div>
+        <div class="rbtn" id="rb-female" onclick="selectRadio('gender','female')">女宝宝 👧</div>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="flabel">喂养方式</label>
+      <div class="radio-row">
+        <div class="rbtn" id="rb-breast" onclick="selectRadio('feed','breast')">母乳</div>
+        <div class="rbtn" id="rb-formula" onclick="selectRadio('feed','formula')">配方奶</div>
+        <div class="rbtn" id="rb-mixed" onclick="selectRadio('feed','mixed')">混合喂养</div>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveSettings()">保存</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let S = {birthday:'', gender:'male', feed:'breast'};
+let radios = {gender:'male', feed:'breast'};
+const SECTIONS = ['home','cry','feed','sleep','poop','growth','vaccine'];
+let feedTimesMin = 8, feedTimesMax = 12; // 当前月龄喂奶次数范围，供计算器使用
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showSection(id) {
+  SECTIONS.forEach(s => {
+    document.getElementById('sec-'+s).classList.toggle('active', s===id);
+  });
+  document.querySelectorAll('.nav-link').forEach((el,i) => {
+    el.classList.toggle('active', SECTIONS[i] === id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════
+function initDateSelects() {
+  const yearEl = document.getElementById('sel-year');
+  if (yearEl.options.length > 1) return;
+  const now = new Date();
+  for (let y = now.getFullYear(); y >= now.getFullYear() - 1; y--) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y + '年'; yearEl.appendChild(o);
+  }
+  const dayEl = document.getElementById('sel-day');
+  for (let d = 1; d <= 31; d++) {
+    const o = document.createElement('option');
+    o.value = String(d).padStart(2,'0'); o.textContent = d + '日'; dayEl.appendChild(o);
+  }
+}
+
+function openSettings() {
+  initDateSelects();
+  if (S.birthday) {
+    const p = S.birthday.split('-');
+    document.getElementById('sel-year').value  = p[0]||'';
+    document.getElementById('sel-month').value = p[1]||'';
+    document.getElementById('sel-day').value   = p[2]||'';
+  }
+  radios.gender = S.gender || 'male';
+  radios.feed   = S.feed   || 'breast';
+  setRadioUI('gender', radios.gender);
+  setRadioUI('feed',   radios.feed);
+  document.getElementById('settings-err').style.display = 'none';
+  document.getElementById('settings-overlay').classList.remove('hidden');
+}
+
+function setRadioUI(group, val) {
+  const ids = {male:'rb-male',female:'rb-female',breast:'rb-breast',formula:'rb-formula',mixed:'rb-mixed'};
+  const groups = {gender:['male','female'], feed:['breast','formula','mixed']};
+  groups[group].forEach(v => {
+    const el = document.getElementById(ids[v]);
+    if (el) el.classList.toggle('sel', v===val);
+  });
+}
+
+function selectRadio(group, val) {
+  radios[group] = val; setRadioUI(group, val);
+}
+
+function saveSettings() {
+  const errEl = document.getElementById('settings-err');
+  errEl.style.display = 'none';
+  const y = document.getElementById('sel-year').value;
+  const m = document.getElementById('sel-month').value;
+  const d = document.getElementById('sel-day').value;
+  if (!y || !m || !d) {
+    errEl.textContent = '请选择宝宝生日（年、月、日都要选）';
+    errEl.style.display = 'block'; return;
+  }
+  S = {birthday: y+'-'+m+'-'+d, gender: radios.gender||'male', feed: radios.feed||'breast'};
+  localStorage.setItem('mama_settings', JSON.stringify(S));
+  document.getElementById('settings-overlay').classList.add('hidden');
+  try { renderHome(); } catch(e) { console.error(e); }
+  try { renderFeed(); renderSleep(); renderGrowth(); renderVaccine(); } catch(e) { console.error(e); }
+}
+
+// ══════════════════════════════════════════
+// AGE CALCULATION
+// ══════════════════════════════════════════
+function getAge() {
+  if (!S.birthday) return null;
+  const birth = new Date(S.birthday), now = new Date();
+  const diffMs = now - birth;
+  if (diffMs < 0) return {days:-1, months:0, display:'日期有误', mode:'err'};
+  const diffDays = Math.floor(diffMs/86400000);
+  let months = (now.getFullYear()-birth.getFullYear())*12 + (now.getMonth()-birth.getMonth());
+  if (now.getDate() < birth.getDate()) months--;
+  months = Math.max(0,months);
+  let display, mode;
+  if (diffDays<=7)       { display=`出生第 ${diffDays+1} 天`; mode='A'; }
+  else if (diffDays<=30) { display=`出生第 ${diffDays+1} 天`; mode='B'; }
+  else                   { display=`${months} 个月`; mode='C'; }
+  return {days:diffDays, months, display, mode};
+}
+
+// ══════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════
+function renderHome() {
+  const age = getAge();
+  const gText = S.gender==='male' ? '男宝宝' : '女宝宝';
+  const fText = {breast:'母乳',formula:'配方奶',mixed:'混合喂养'}[S.feed]||'';
+  const ageDisplay = age ? age.display : '未设置生日';
+  document.getElementById('home-hero').innerHTML = `
+    <div class="home-hero" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+      <div>
+        <div style="font-size:13px;color:var(--dim);margin-bottom:6px">宝宝现在</div>
+        <div class="hero-age">${ageDisplay}</div>
+        <div class="hero-meta" style="margin-top:8px">${gText} · ${fText}</div>
+      </div>
+      <button onclick="openSettings()" style="flex-shrink:0;background:rgba(244,167,192,.18);border:1.5px solid rgba(244,167,192,.45);color:var(--accent);border-radius:12px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;letter-spacing:.02em" onmouseover="this.style.background='rgba(244,167,192,.28)'" onmouseout="this.style.background='rgba(244,167,192,.18)'">✏️ 编辑宝宝信息</button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// FEED
+// ══════════════════════════════════════════
+const FEED_DATA = [
+  {m:0,  once:'60–100ml',  times:'8–12次', gap:'2–3小时',     total:'约500–750ml'},
+  {m:1,  once:'80–120ml',  times:'8–10次', gap:'1.5–2.5小时', total:'约600–750ml'},
+  {m:2,  once:'120–160ml', times:'6–8次',  gap:'2.5–3小时',   total:'约700–850ml'},
+  {m:3,  once:'150–180ml', times:'5–6次',  gap:'3–4小时',     total:'约750–1000ml'},
+  {m:4,  once:'160–200ml', times:'5–6次',  gap:'3–4小时',     total:'约800–1050ml'},
+  {m:5,  once:'180–220ml', times:'4–5次',  gap:'3.5–4小时',   total:'约850–1100ml'},
+];
+
+function renderFeed() {
+  const age = getAge();
+  const days = age ? age.days : 0;
+  const months = age ? age.months : 0;
+  const isBreast = S.feed !== 'formula';
+  let mainHTML = '';
+
+  if (!age || age.days < 0) {
+    mainHTML = '<div class="alert yellow">请先在设置中填写宝宝生日</div>';
+  } else if (days <= 6) {
+    const dayN = days+1;
+    mainHTML = `<div class="sc hl"><h3>今天是出生第 ${dayN} 天</h3>
+      ${isBreast
+        ? `<div class="row"><span class="lbl">喂养方式</span><span class="val">按需哺乳，宝宝饿了就喂</span></div>
+           <div class="row"><span class="lbl">每日次数参考</span><span class="val">8–12次</span></div>
+           <div class="alert green" style="margin-top:12px">初乳期——量少但营养密度极高，同时建立泌乳。</div>`
+        : `<div class="two-col" style="margin-bottom:16px">
+             <div style="background:var(--card2);border-radius:12px;padding:20px;text-align:center">
+               <div style="font-size:13px;color:var(--dim)">每次参考量</div>
+               <div style="font-size:36px;font-weight:800;color:var(--accent)">${Math.min(dayN*10,80)}<span style="font-size:16px;color:var(--dim)">ml</span></div>
+               <div style="font-size:12px;color:var(--dim)">第${dayN}天 × 10ml</div>
+             </div>
+             <div style="background:var(--card2);border-radius:12px;padding:20px;text-align:center">
+               <div style="font-size:13px;color:var(--dim)">每日次数</div>
+               <div style="font-size:36px;font-weight:800;color:var(--accent2)">8–12</div>
+               <div style="font-size:12px;color:var(--dim)">次</div>
+             </div>
+           </div>`
+      }
+    </div>`;
+  } else if (days <= 30) {
+    mainHTML = `<div class="sc hl"><h3>出生第 ${days+1} 天</h3>
+      ${isBreast
+        ? `<div class="row"><span class="lbl">方式</span><span class="val">按需哺乳</span></div>
+           <div class="row"><span class="lbl">次数</span><span class="val">8–12次 / 天</span></div>
+           <div class="row"><span class="lbl">间隔</span><span class="val">2–3小时</span></div>`
+        : `<div class="row"><span class="lbl">每次</span><span class="val">80–120ml</span></div>
+           <div class="row"><span class="lbl">次数</span><span class="val">8–12次 / 天</span></div>
+           <div class="row"><span class="lbl">间隔</span><span class="val">2–3小时</span></div>`
+      }
+    </div>`;
+  } else if (months >= 6) {
+    mainHTML = `<div class="sc hl"><h3>🌱 宝宝已满 6 个月</h3>
+      <p style="font-size:14px;line-height:1.8;color:var(--text)">可以开始添加辅食了。喂奶量会随辅食增加逐渐调整，建议咨询儿科医生获取个性化方案。</p></div>`;
+  } else {
+    const d = FEED_DATA.find(r=>r.m===months)||FEED_DATA[FEED_DATA.length-1];
+    mainHTML = `<div class="sc hl"><h3>${months} 个月宝宝喂奶参考</h3>
+      <div class="three-col" style="margin-bottom:16px">
+        ${!isBreast ? `<div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">每次参考量</div>
+          <div style="font-size:28px;font-weight:800;color:var(--accent)">${d.once}</div></div>` : ''}
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">每日次数</div>
+          <div style="font-size:28px;font-weight:800;color:var(--accent2)">${d.times}</div></div>
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">喂奶间隔</div>
+          <div style="font-size:22px;font-weight:800;color:var(--accent3)">${d.gap}</div></div>
+        ${!isBreast ? `<div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">每日总量</div>
+          <div style="font-size:22px;font-weight:800;color:var(--green)">${d.total}</div></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // 同步当前月龄喂奶次数供计算器使用
+  if (days <= 30) {
+    feedTimesMin = 8; feedTimesMax = 12;
+  } else {
+    const fd = FEED_DATA.find(r=>r.m===months);
+    if (fd) {
+      const parts = fd.times.replace('次','').split('–');
+      feedTimesMin = parseInt(parts[0]); feedTimesMax = parseInt(parts[1]||parts[0]);
+    }
+  }
+
+  const newbornRow = `
+    <tr class="${days<=6?'cur':''}">
+      <td rowspan="2" style="white-space:nowrap;vertical-align:middle">0月</td>
+      <td style="white-space:nowrap"><span style="font-size:11px;color:var(--dim)">7天以内</span><br>日龄×10ml<br><span style="font-size:11px;color:var(--dim)">第1天10ml…第7天70ml</span></td>
+      <td>8–12次</td><td>2–3小时</td>
+      <td style="white-space:nowrap">按次数计<br><span style="font-size:11px;color:var(--dim)">随日龄递增</span></td>
+    </tr>`;
+  const tableRows = newbornRow + FEED_DATA.map(r=>`
+    <tr class="${r.m===0?(days>7&&days<=30?'cur':''):(r.m===months&&months>=1&&months<6?'cur':'')}">
+      ${r.m===0?'':`<td style="white-space:nowrap">${r.m}月</td>`}
+      ${r.m===0?`<td><span style="font-size:11px;color:var(--dim)">7天后</span><br>${r.once}</td>`:`<td>${r.once}</td>`}
+      <td>${r.times}</td><td>${r.gap}</td><td>${r.total}</td>
+    </tr>`).join('');
+
+  document.getElementById('feed-content').innerHTML = `
+    ${mainHTML}
+    <div class="two-col">
+      <div class="sc">
+        <h3>按体重算奶量（参考）</h3>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:14px;line-height:1.6">适合配方奶 / 混合喂养参考。母乳按需哺乳，无需计算。</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <input type="number" id="weight-input" placeholder="输入宝宝体重，如 5.5" step="0.1" min="1" max="15"
+            style="flex:1;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:17px;color:var(--text);font-family:inherit"
+            oninput="calcByWeight()">
+          <span style="color:var(--dim);font-size:15px;white-space:nowrap">kg</span>
+        </div>
+        <div id="weight-result" style="display:none">
+          <!-- 每日总量 -->
+          <div style="background:var(--card2);border-radius:12px;padding:16px;margin-bottom:10px">
+            <div style="font-size:12px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">每天总奶量</div>
+            <div style="font-size:13px;color:var(--dim);margin-bottom:6px" id="wr-formula-total"></div>
+            <div id="wr-total" style="font-size:30px;font-weight:800;color:var(--accent);line-height:1"></div>
+            <div id="wr-range" style="font-size:13px;color:var(--dim);margin-top:6px"></div>
+          </div>
+          <!-- 每次奶量 -->
+          <div style="background:var(--card2);border-radius:12px;padding:16px;margin-bottom:12px">
+            <div style="font-size:12px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">每次奶量</div>
+            <div style="font-size:13px;color:var(--dim);margin-bottom:6px" id="wr-formula-once"></div>
+            <div id="wr-once" style="font-size:30px;font-weight:800;color:var(--accent2);line-height:1"></div>
+            <div id="wr-once-range" style="font-size:13px;color:var(--dim);margin-top:6px"></div>
+          </div>
+          <div class="alert yellow" style="font-size:13px">仅供参考，实际以宝宝饥饱信号为准。配方奶以奶粉罐说明为准。</div>
+          <div style="font-size:12px;color:var(--dim);margin-top:10px;line-height:1.7">
+            ⚠️ 3个月以上宝宝建议以上方「各月龄参考表」为主，体重公式容易偏高。
+          </div>
+        </div>
+        <div id="weight-placeholder" style="color:var(--dim);font-size:13px;text-align:center;padding:8px 0">输入体重后自动计算</div>
+      </div>
+      <div class="sc hl"><h3>喂饱判断</h3>
+        <div class="row"><span class="lbl">尿不湿</span><span class="val">≥ 6片 / 每日</span></div>
+        <div class="row" style="align-items:flex-start">
+          <span class="lbl">每日增重</span>
+          <span class="val" style="text-align:right;line-height:1.9">
+            0–3个月：25–40g<br>
+            3–6个月：15–25g
+          </span>
+        </div>
+        <div class="row"><span class="lbl">精神</span><span class="val">喂完后安静满足</span></div>
+      </div>
+    </div>
+    <div class="sc"><h3>各月龄参考表</h3>
+      <div class="tbl-wrap"><table class="tbl">
+        <tr><th>月龄</th><th>每次</th><th>次数</th><th>间隔</th><th>每日总量</th></tr>
+        ${tableRows}
+      </table></div>
+    </div>
+    <div class="alert yellow"><div class="alert-title">注意事项</div>
+      配方奶以奶粉罐标注为准 · 间隔以宝宝饿了就喂为准，不强求固定时间 · 混合喂养按母乳逻辑处理
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// SLEEP
+// ══════════════════════════════════════════
+const SLEEP_DATA = [
+  {m:0, total:'16–18小时', naps:'4–6次', awake:'45–60分钟', nightHours:'约8–9小时',  nightFeed:'每2–3小时一醒'},
+  {m:1, total:'15–17小时', naps:'4–5次', awake:'约1小时',   nightHours:'约8–9小时',  nightFeed:'夜奶2–3次'},
+  {m:2, total:'14–16小时', naps:'3–4次', awake:'1–1.5小时', nightHours:'约9–10小时', nightFeed:'夜奶2–3次'},
+  {m:3, total:'14–16小时', naps:'3–4次', awake:'1.5小时',   nightHours:'约9–10小时', nightFeed:'夜奶1–2次'},
+  {m:4, total:'13–15小时', naps:'3次',   awake:'2–2.5小时', nightHours:'约10–11小时',nightFeed:'夜奶1–2次'},
+  {m:5, total:'12–14小时', naps:'2–3次', awake:'2–2.5小时', nightHours:'约10–11小时',nightFeed:'夜奶0–1次'},
+];
+const SCHEDULES = {
+  2:[['07:00','起床 + 喂奶'],['08:00','小睡1（约1.5小时）'],['09:30','醒 + 喂奶 + 玩'],['11:00','小睡2（约1.5小时）'],['12:30','醒 + 喂奶 + 玩'],['14:00','小睡3（约1.5小时）'],['15:30','醒 + 喂奶 + 玩'],['17:00','黄昏觉（约40分钟）'],['19:30','夜觉入睡'],['夜间','夜奶2–3次']],
+  3:[['07:00','起床 + 喂奶'],['08:30','小睡1（约1.5小时）'],['10:00','醒 + 喂奶 + 玩'],['11:30','小睡2（约1.5小时）'],['13:00','醒 + 喂奶 + 玩'],['14:30','小睡3（约1小时）'],['16:00','醒 + 喂奶 + 玩'],['17:30','黄昏觉（约30分钟，可省略）'],['19:30','夜觉入睡（不晚于21:00）'],['夜间','夜奶1–2次']],
+  4:[['07:00','起床 + 喂奶'],['09:00','小睡1（约1.5小时）'],['10:30','醒 + 喂奶 + 玩'],['12:30','小睡2（约1.5小时）'],['14:00','醒 + 喂奶 + 玩'],['16:00','黄昏觉（约40分钟）'],['19:00','夜觉入睡'],['夜间','夜奶1–2次']],
+  5:[['07:00','起床 + 喂奶'],['09:30','小睡1（约1.5小时）'],['11:00','醒 + 喂奶 + 玩'],['13:30','小睡2（约1.5小时）'],['15:00','醒 + 喂奶 + 玩'],['17:00','黄昏觉（约30分钟，可省略）'],['19:30','夜觉入睡'],['夜间','夜奶0–1次']],
+};
+
+function renderSleep() {
+  const age = getAge();
+  const months = age ? Math.min(age.months,5) : 0;
+  const cur = SLEEP_DATA.find(r=>r.m===months)||SLEEP_DATA[0];
+  const sched = SCHEDULES[months];
+
+  const tableRows = SLEEP_DATA.map(r=>`
+    <tr class="${r.m===months?'cur':''}">
+      <td>${r.m}月</td><td>${r.total}</td><td>${r.naps}</td><td>${r.awake}</td><td style="font-size:12px;text-align:left">${r.nightHours}<br><span style="color:var(--dim)">${r.nightFeed}</span></td>
+    </tr>`).join('');
+
+  document.getElementById('sleep-content').innerHTML = `
+    <div class="sc hl">
+      <h3>${months}个月宝宝睡眠参考</h3>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px">
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">每日总睡眠</div>
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">${cur.total}</div></div>
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">白天小觉</div>
+          <div style="font-size:24px;font-weight:800;color:var(--yellow)">${cur.naps}</div></div>
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">两觉间隔</div>
+          <div style="font-size:24px;font-weight:800;color:var(--accent2)">${cur.awake}</div></div>
+        <div style="background:var(--card2);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--dim)">夜间睡眠</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green);margin-top:4px">${cur.nightHours}</div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">${cur.nightFeed}</div></div>
+      </div>
+    </div>
+    ${months===4?'<div class="alert yellow"><div class="alert-title">⚠️ 4月龄睡眠倒退期</div>频繁夜醒、小睡变短是正常发育现象，持续2–6周后自行好转。</div>':''}
+    ${sched?`<div class="sc"><h3>参考作息（${months}月龄，以7:00起床为例）</h3>
+      <div class="alert purple" style="margin-bottom:14px;font-size:13px">时间仅供参考，按宝宝实际状态灵活调整</div>
+      <div class="sched-grid">${sched.map(([t,d])=>`<div class="sched-row"><span class="sched-time">${t}</span><span>${d}</span></div>`).join('')}</div>
+    </div>`:'<div class="alert yellow">0–1月龄不建议强求时间表，看到困了就让睡。</div>'}
+    <div class="sc"><h3>睡眠参考表（0–5月）</h3>
+      <div class="tbl-wrap"><table class="tbl">
+        <tr><th>月龄</th><th>总睡眠</th><th>小觉次数</th><th>两觉间隔</th><th style="text-align:left">夜间</th></tr>
+        ${tableRows}
+      </table></div>
+      <p class="source-note">白天单次小睡超过3小时需温柔叫醒</p>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// POOP
+// ══════════════════════════════════════════
+function renderPoop() {
+  document.getElementById('poop-content').innerHTML = `
+    <div class="two-col">
+      <div class="sc hl"><h3>大便颜色对照</h3>
+        <p style="font-size:12px;color:var(--dim);margin-bottom:14px">参考日本母子手帐·便色卡（1–3号须就医，4–7号正常）</p>
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#f0ece0;border:2px solid var(--red);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--red)">1</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">灰白</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#e8dcb0;border:2px solid var(--red);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--red)">2</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">淡奶白</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#e0d088;border:2px solid var(--red);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--red)">3</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">浅黄</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#c8a028;border:2px solid var(--green);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--green)">4</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">黄色</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#b07818;border:2px solid var(--green);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--green)">5</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">金黄</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#8a5818;border:2px solid var(--green);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--green)">6</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">橙棕</div>
+          </div>
+          <div style="flex:1;text-align:center">
+            <div style="height:44px;border-radius:8px;background:#5a3810;border:2px solid var(--green);margin-bottom:5px"></div>
+            <div style="font-size:15px;font-weight:700;color:var(--green)">7</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px">深棕</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <div style="flex:3;background:rgba(248,113,113,.1);border:1px solid var(--red);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--red);text-align:center">1–3号 ⚠️ 须就医</div>
+          <div style="flex:4;background:rgba(110,231,183,.1);border:1px solid var(--green);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--green);text-align:center">4–7号 ✅ 正常范围</div>
+        </div>
+        <div class="alert green" style="font-size:12px">偏绿（黄绿色）属正常，是肠蠕动快或铁质未完全吸收，不是"受惊"所致。</div>
+        <div class="alert red" style="margin-top:8px;font-size:12px">1–3号（灰白/陶土色）提示胆汁排出受阻，可能为<strong>胆道闭锁</strong>，须尽早就医。</div>
+      </div>
+      <div class="sc"><h3>正常排便频次</h3>
+        <p style="font-size:12px;color:var(--dim);margin-bottom:12px">以下为参考范围，略高或略低均属正常，以宝宝状态为准</p>
+        <div class="row" style="align-items:flex-start">
+          <span class="lbl">母乳</span>
+          <span class="val" style="text-align:right;line-height:1.9">
+            新生儿：每天4–10次<br>满月后：每天1–4次<br>3月后：每天1–4次或每数天1次
+          </span>
+        </div>
+        <div class="row"><span class="lbl">配方奶</span><span class="val">每天1–3次</span></div>
+        <div class="alert yellow" style="margin-top:12px">
+          <div class="alert-title">便秘判断</div>
+          看排便是否费力、大便是否干硬——<strong>不是看次数</strong>
+        </div>
+        <div class="alert purple" style="margin-top:8px">
+          <div class="alert-title">攒肚（约3个月左右）</div>
+          2–7天一次但排便不费力、便软、状态好 → 正常
+        </div>
+      </div>
+    </div>
+    <div class="sc urgent-sc"><h3>🚨 立即就医的信号</h3>
+      <div class="two-col">
+        <div class="alert red"><strong>白色/陶土色</strong> → 胆道梗阻</div>
+        <div class="alert red"><strong>果酱色</strong> → 肠套叠（急症，立即急诊）</div>
+        <div class="alert red"><strong>鲜血便（大量）</strong> → 肠道出血</div>
+        <div class="alert red"><strong>黑色柏油便</strong>（无铁剂史）→ 上消化道出血</div>
+        <div class="alert yellow" style="grid-column:1/-1"><strong>水样便 + 次数暴增 + 发热</strong> → 可能轮状病毒，注意防脱水</div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// GROWTH
+// ══════════════════════════════════════════
+const GROWTH = {
+  male:{
+    weight:[{m:0,p3:2.8,p50:3.5,p97:4.2,gain:'—'},{m:1,p3:3.7,p50:4.6,p97:5.6,gain:'+1.1kg'},{m:2,p3:4.7,p50:5.8,p97:7.1,gain:'+1.2kg'},{m:3,p3:5.5,p50:6.8,p97:8.3,gain:'+1.0kg'},{m:4,p3:6.1,p50:7.4,p97:9.1,gain:'+0.6kg'},{m:5,p3:6.6,p50:7.9,p97:9.7,gain:'+0.5kg'},{m:6,p3:6.9,p50:8.4,p97:10.2,gain:'+0.5kg'}],
+    height:[{m:0,p3:47.5,p50:50.0,p97:52.6,gain:'—'},{m:1,p3:51.6,p50:54.5,p97:57.2,gain:'+4.5cm'},{m:2,p3:55.0,p50:58.0,p97:61.0,gain:'+3.5cm'},{m:3,p3:57.9,p50:61.1,p97:64.3,gain:'+3.1cm'},{m:4,p3:60.4,p50:63.7,p97:67.2,gain:'+2.6cm'},{m:5,p3:62.4,p50:65.9,p97:69.6,gain:'+2.2cm'},{m:6,p3:64.3,p50:67.9,p97:71.6,gain:'+2.0cm'}],
+    head:[{m:0,v:34.5},{m:3,v:40.2},{m:6,v:43.4}],
+  },
+  female:{
+    weight:[{m:0,p3:2.7,p50:3.3,p97:4.0,gain:'—'},{m:1,p3:3.5,p50:4.3,p97:5.2,gain:'+1.0kg'},{m:2,p3:4.4,p50:5.4,p97:6.6,gain:'+1.1kg'},{m:3,p3:5.1,p50:6.3,p97:7.7,gain:'+0.9kg'},{m:4,p3:5.6,p50:6.9,p97:8.5,gain:'+0.6kg'},{m:5,p3:6.0,p50:7.4,p97:9.1,gain:'+0.5kg'},{m:6,p3:6.4,p50:7.8,p97:9.6,gain:'+0.4kg'}],
+    height:[{m:0,p3:46.6,p50:49.1,p97:51.7,gain:'—'},{m:1,p3:50.5,p50:53.4,p97:56.2,gain:'+4.3cm'},{m:2,p3:53.9,p50:56.9,p97:60.0,gain:'+3.5cm'},{m:3,p3:56.7,p50:59.9,p97:63.2,gain:'+3.0cm'},{m:4,p3:59.0,p50:62.4,p97:65.9,gain:'+2.5cm'},{m:5,p3:61.0,p50:64.5,p97:68.1,gain:'+2.1cm'},{m:6,p3:62.7,p50:66.4,p97:70.0,gain:'+1.9cm'}],
+    head:[{m:0,v:33.9},{m:3,v:39.4},{m:6,v:42.4}],
+  }
+};
+
+function renderGrowth() {
+  const age = getAge();
+  const months = age ? Math.min(age.months,6) : 0;
+  const gender = S.gender||'male';
+  const gd = GROWTH[gender];
+  const curW = gd.weight.find(r=>r.m===months)||gd.weight[0];
+  const curH = gd.height.find(r=>r.m===months)||gd.height[0];
+  const headRef = gd.head.filter(r=>r.m<=months);
+  const latestHead = headRef.length ? headRef[headRef.length-1] : gd.head[0];
+
+  const wRows = gd.weight.map(r=>`<tr class="${r.m===months?'cur':''}"><td>${r.m}月</td><td>${r.p3}</td><td>${r.p50}</td><td>${r.p97}</td><td>${r.gain}</td></tr>`).join('');
+  const hRows = gd.height.map(r=>`<tr class="${r.m===months?'cur':''}"><td>${r.m}月</td><td>${r.p3}</td><td>${r.p50}</td><td>${r.p97}</td><td>${r.gain}</td></tr>`).join('');
+
+  document.getElementById('growth-content').innerHTML = `
+    <div class="sc hl"><h3>${months}个月参考值（${gender==='male'?'男宝宝':'女宝宝'}）</h3>
+      <div class="three-col" style="margin-bottom:16px">
+        <div style="background:var(--card2);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:12px;color:var(--dim);margin-bottom:4px">体重</div>
+          <div style="font-size:13px;color:var(--dim);margin-bottom:2px">正常范围</div>
+          <div style="font-size:22px;font-weight:800;color:var(--accent)">${curW.p3}–${curW.p97}<span style="font-size:13px;color:var(--dim)">kg</span></div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">中位数 ${curW.p50}kg</div>
+        </div>
+        <div style="background:var(--card2);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:12px;color:var(--dim);margin-bottom:4px">身长</div>
+          <div style="font-size:13px;color:var(--dim);margin-bottom:2px">正常范围</div>
+          <div style="font-size:22px;font-weight:800;color:var(--accent2)">${curH.p3}–${curH.p97}<span style="font-size:13px;color:var(--dim)">cm</span></div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">中位数 ${curH.p50}cm</div>
+        </div>
+        <div style="background:var(--card2);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:12px;color:var(--dim);margin-bottom:4px">头围</div>
+          <div style="font-size:13px;color:var(--dim);margin-bottom:2px">中位数</div>
+          <div style="font-size:22px;font-weight:800;color:var(--green)">${latestHead.v}<span style="font-size:13px;color:var(--dim)">cm</span></div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">${latestHead.m}月 P50</div>
+        </div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="sc"><h3>体重参考表（kg）</h3>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>月龄</th><th>P3<br><span style="font-size:10px;font-weight:400;color:var(--dim)">正常下限</span></th><th>P50<br><span style="font-size:10px;font-weight:400;color:var(--dim)">平均值</span></th><th>P97<br><span style="font-size:10px;font-weight:400;color:var(--dim)">正常上限</span></th><th>月增重</th></tr>${wRows}
+        </table></div>
+      </div>
+      <div class="sc"><h3>身长参考表（cm）</h3>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>月龄</th><th>P3<br><span style="font-size:10px;font-weight:400;color:var(--dim)">正常下限</span></th><th>P50<br><span style="font-size:10px;font-weight:400;color:var(--dim)">平均值</span></th><th>P97<br><span style="font-size:10px;font-weight:400;color:var(--dim)">正常上限</span></th><th>月增长</th></tr>${hRows}
+        </table></div>
+      </div>
+    </div>
+    <div class="alert green"><div class="alert-title">如何看这些数据</div>
+      P3–P97 之间都属正常 · 比绝对值更重要的是趋势——曲线跨越2条主线才需关注 · 单次偏低/偏高不必焦虑，持续偏低才就医
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// VACCINE
+// ══════════════════════════════════════════
+let vaxCountry = 'cn';
+
+const VAX_DATA = {
+  cn: [
+    {m:0,  list:[{name:'乙肝（HBV）第1针',fee:'公费'},{name:'卡介苗（BCG·防结核）',fee:'公费'}]},
+    {m:1,  list:[{name:'乙肝（HBV）第2针',fee:'公费'}]},
+    {m:2,  list:[{name:'脊灰（IPV）第1剂',fee:'公费'},{name:'肺炎球菌（PCV13）第1针',fee:'自费'},{name:'轮状病毒（RV）第1剂 💊口服',fee:'自费'},{name:'Hib 第1针',fee:'自费'}]},
+    {m:3,  list:[{name:'脊灰（IPV）第2剂',fee:'公费'},{name:'百白破（DTaP）第1针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'}]},
+    {m:4,  list:[{name:'脊灰（OPV）第3剂 💊口服糖丸',fee:'公费'},{name:'百白破（DTaP）第2针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'},{name:'肺炎球菌（PCV13）第2针',fee:'自费'},{name:'轮状病毒（RV）第2剂 💊口服',fee:'自费'},{name:'Hib 第2针',fee:'自费'}]},
+    {m:5,  list:[{name:'百白破（DTaP）第3针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'}]},
+    {m:6,  list:[{name:'乙肝（HBV）第3针',fee:'公费'},{name:'A群流脑（MenA）第1针',fee:'公费'},{name:'肺炎球菌（PCV13）第3针',fee:'自费'},{name:'轮状病毒（RV）第3剂 💊口服',fee:'自费'},{name:'Hib 第3针',fee:'自费'}]},
+  ],
+  jp: [
+    {m:2,  list:[{name:'五種混合（DPT-IPV-Hib）第1针',fee:'公费',note:'百日咳 · 白喉 · 破伤风 · 脊灰 · Hib'},{name:'肺炎球菌（PCV13）第1针',fee:'公费'},{name:'乙肝（HBV）第1针',fee:'公费'},{name:'轮状病毒（RV）第1剂 💊口服',fee:'公费'}]},
+    {m:3,  list:[{name:'五種混合（DPT-IPV-Hib）第2针',fee:'公费',note:'百日咳 · 白喉 · 破伤风 · 脊灰 · Hib'},{name:'肺炎球菌（PCV13）第2针',fee:'公费'},{name:'乙肝（HBV）第2针',fee:'公费'},{name:'轮状病毒（RV）第2剂 💊口服（Rotarix 2剂型至此完成）',fee:'公费'}]},
+    {m:4,  list:[{name:'五種混合（DPT-IPV-Hib）第3针',fee:'公费',note:'百日咳 · 白喉 · 破伤风 · 脊灰 · Hib'},{name:'肺炎球菌（PCV13）第3针',fee:'公费'},{name:'轮状病毒（RV）第3剂 💊口服（RotaTeq 3剂型限定）',fee:'公费'}]},
+    {m:5,  list:[{name:'卡介苗（BCG·防结核）',fee:'公费'}]},
+    {m:7,  list:[{name:'乙肝（HBV）第3针',fee:'公费'},{name:'流感疫苗',fee:'自费'}]},
+    {m:12, list:[{name:'麻疹・风疹混合（MR）第1期',fee:'公费'},{name:'水痘 第1回（12–15个月）',fee:'公费'}]},
+    {m:18, list:[{name:'水痘 第2回（第1回接种后6–12个月）',fee:'公费'}]},
+    {m:60, list:[{name:'麻疹・风疹混合（MR）第2期',fee:'公费'}]},
+  ],
+  us: [
+    {m:0,  list:[{name:'乙肝（HBV）第1针',fee:'公费'}]},
+    {m:2,  list:[{name:'乙肝（HBV）第2针',fee:'公费'},{name:'轮状病毒（RV）第1针 💊口服',fee:'公费'},{name:'百白破（DTaP）第1针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'},{name:'Hib 第1针',fee:'公费'},{name:'肺炎球菌（PCV15/PCV20）第1针',fee:'公费'},{name:'脊灰（IPV）第1针',fee:'公费'}]},
+    {m:4,  list:[{name:'轮状病毒（RV）第2针 💊口服',fee:'公费'},{name:'百白破（DTaP）第2针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'},{name:'Hib 第2针',fee:'公费'},{name:'肺炎球菌（PCV15/PCV20）第2针',fee:'公费'},{name:'脊灰（IPV）第2针',fee:'公费'}]},
+    {m:6,  list:[{name:'乙肝（HBV）第3针',fee:'公费'},{name:'轮状病毒（RV）第3针 💊口服',fee:'公费'},{name:'百白破（DTaP）第3针',fee:'公费',note:'百日咳 · 白喉 · 破伤风'},{name:'Hib 第3针',fee:'公费'},{name:'肺炎球菌（PCV15/PCV20）第3针',fee:'公费'},{name:'流感疫苗（首次）',fee:'公费'},{name:'RSV 预防单抗 Nirsevimab',fee:'公费',note:'VFC 覆盖，秋冬季出生婴儿优先'},{name:'COVID-19 疫苗（首次）',fee:'公费',note:'6月龄起，mRNA 系列接种'}]},
+  ],
+};
+
+const VAX_META = {
+  cn: {flag:'🇨🇳', label:'中国', src:'中国免疫规划疫苗儿童免疫程序（2021年版，最新版本请以当地医院 / 社区卫生服务中心通知为准）', feeLabel:'公费=一类苗免费，自费=二类苗自付'},
+  jp: {flag:'🇯🇵', label:'日本', src:'日本 定期接種スケジュール（厚生労働省）', feeLabel:'公费=定期接種（无料），自费=任意接種（有料）'},
+  us: {flag:'🇺🇸', label:'美国', src:'美国 CDC ACIP 推荐免疫程序', feeLabel:'公费=保险/VFC覆盖，自费=自付'},
+};
+
+function renderVaccine() {
+  const age = getAge();
+  const months = age ? age.months : 0;
+  const data = VAX_DATA[vaxCountry];
+  const meta = VAX_META[vaxCountry];
+
+  const items = data.map(v => {
+    let cls, label;
+    if (v.m < months)         { cls='done';   label='✓ 已完成'; }
+    else if (v.m === months)  { cls='curr';   label='本月应打'; }
+    else if (v.m <= months+2) { cls='soon';   label='即将到来'; }
+    else                      { cls='future'; label='未到时间'; }
+    const vaccines = v.list.map(vx => `
+      <span style="display:inline-flex;flex-direction:column;gap:2px;margin:3px 4px 3px 0;background:var(--card);border-radius:6px;padding:5px 8px;font-size:13px">
+        <span style="display:flex;align-items:center;gap:4px">
+          ${vx.name}
+          <span style="font-size:10px;padding:1px 5px;border-radius:4px;font-weight:600;white-space:nowrap;${vx.fee==='公费'?'background:rgba(110,231,183,.2);color:var(--green)':'background:rgba(252,211,77,.2);color:var(--yellow)'}">${vx.fee}</span>
+        </span>
+        ${vx.note?`<span style="font-size:10px;color:var(--dim)">${vx.note}</span>`:''}
+      </span>`).join('');
+    return `<div class="vax-item ${cls}">
+      <div class="vstatus">${label}</div>
+      <div class="vinfo">
+        <div class="vm">${v.m===0?'出生时':v.m===60?'小学入学前一年':v.m+'个月'}</div>
+        <div style="margin-top:6px;line-height:1">${vaccines}</div>
+        ${cls==='curr'?'<div class="vcue" style="margin-top:8px">📌 记得携带预防接种证</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('vaccine-content').innerHTML = `
+    <div class="sc">
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        ${['cn','jp','us'].map(c=>`
+          <button onclick="vaxCountry='${c}';renderVaccine()"
+            style="flex:1;padding:10px 8px;border-radius:10px;border:2px solid ${vaxCountry===c?'var(--accent)':'var(--border)'};background:${vaxCountry===c?'rgba(244,167,192,.1)':'var(--card2)'};color:${vaxCountry===c?'var(--accent)':'var(--dim)'};font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s">
+            ${VAX_META[c].flag} ${VAX_META[c].label}
+          </button>`).join('')}
+      </div>
+      <h3>${meta.flag} ${meta.label} · 疫苗进度（当前 ${months} 个月）</h3>
+      <p style="font-size:12px;color:var(--dim);margin:6px 0 16px">${meta.feeLabel}</p>
+      <div class="vax-list">${items}</div>
+      <p class="source-note" style="margin-top:12px">数据来源：${meta.src}</p>
+    </div>
+    <div class="alert yellow">
+      <div class="alert-title">💡 中国 vs 日美 差异</div>
+      Hib、肺炎球菌、轮状病毒在日本和美国均为公费，中国目前需自费。保护效果明确，建议与儿科医生讨论是否接种。
+    </div>
+    ${vaxCountry==='jp'?`<div class="alert purple">
+      <div class="alert-title">📅 1岁后继续接种（日本）</div>
+      麻疹・风疹混合（MR）第1期 · 水痘①② · おたふくかぜ（任意）· 日本脑炎（3岁〜）
+    </div>`:''}
+    ${vaxCountry==='us'?`<div class="alert purple">
+      <div class="alert-title">📅 6月龄后继续接种（美国）</div>
+      流感（每年）· MMR麻疹风疹腮腺炎（12月龄）· 水痘（12月龄）· 甲肝（12月龄）
+    </div>`:''}
+    ${vaxCountry==='cn'?`<div class="alert purple">
+      <div class="alert-title">📅 6月龄后继续接种（中国）</div>
+      A群流脑②（9月）· 麻腮风（MMR，8月龄）· 乙脑（8月龄）· 甲肝（18月龄）
+    </div>`:''}
+  `;
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init() {
+  const saved = localStorage.getItem('mama_settings');
+  if (saved) { try { S = JSON.parse(saved); } catch(e) {} }
+  if (S.birthday) {
+    renderHome(); renderFeed(); renderSleep(); renderPoop(); renderGrowth(); renderVaccine();
+  } else {
+    renderHome(); renderPoop();
+    openSettings();
+  }
+}
+
+function r10(n) { return Math.round(n / 10) * 10; } // 四舍五入到整十
+
+function calcByWeight() {
+  const w   = parseFloat(document.getElementById('weight-input').value);
+  const res = document.getElementById('weight-result');
+  const ph  = document.getElementById('weight-placeholder');
+  if (!w || w < 1 || w > 15) { res.style.display='none'; ph.style.display='block'; return; }
+
+  // 每日总量：×150 为各国通用中位，范围 ×120–160，封顶 960ml（AAP上限）
+  const total       = r10(Math.min(w * 150, 960));
+  const lo          = r10(w * 120);
+  const hi          = r10(Math.min(w * 160, 960));
+  const cappedTotal = total;
+
+  // 每次奶量 = 每日总量 ÷ 喂奶次数
+  const onceMin = r10(cappedTotal / feedTimesMax);
+  const onceMax = r10(cappedTotal / feedTimesMin);
+
+  const rawTotal = w * 150;
+  document.getElementById('wr-formula-total').textContent =
+    `${w} kg × 150 ml = ${rawTotal > 960 ? '960 ml（封顶）' : total + ' ml'}`;
+  document.getElementById('wr-total').textContent = cappedTotal + ' ml / 天';
+  document.getElementById('wr-range').textContent =
+    `参考范围：${lo}–${hi} ml（×120 ～ ×160，上限 960ml）`;
+
+  document.getElementById('wr-formula-once').textContent =
+    `${cappedTotal} ml ÷ ${feedTimesMin}–${feedTimesMax} 次/天`;
+  document.getElementById('wr-once').textContent = `${onceMin}–${onceMax} ml / 次`;
+  document.getElementById('wr-once-range').textContent =
+    `当前月龄参考喂奶次数：${feedTimesMin}–${feedTimesMax} 次/天`;
+
+  res.style.display = 'block';
+  ph.style.display  = 'none';
+}
+
+init();
+</script>
+</body>
+</html>
